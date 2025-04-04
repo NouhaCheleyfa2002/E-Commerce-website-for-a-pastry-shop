@@ -1,0 +1,32 @@
+
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+*{
+  font-family: Outfit;
+}
+.placeholder-color{
+  color: #e0e0e0;
+  font-weight: 300;
+}
+
+
+
+.admin-dashboard {
+  display: flex;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #1f2937;
+  color: white;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
