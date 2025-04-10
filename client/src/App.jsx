@@ -2,11 +2,29 @@ import React, { useContext} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Routes, Route } from 'react-router-dom';
 import bg2 from './assets/img/second-bg.png';
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { createTheme } from "@mui/material/styles"
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
+import { HashRouter, Route, Routes} from "react-router-dom";
+import { useLocation } from 'react-router-dom';
+
+import { themeSettings } from "./theme.js";
+import Dashboard from './adminDashboard/scenes/dashboard';
+import Layout from './adminDashboard/scenes/layout';
+import Products from './adminDashboard/scenes/products.jsx';
+import Customers from './adminDashboard/scenes/customers/index.jsx';
+import Transactions from './adminDashboard/scenes/transactions/index.jsx';
+import Geography from './adminDashboard/scenes/geography/index.jsx';
+import Overview from './adminDashboard/scenes/overview/index.jsx';
+import Daily from './adminDashboard/scenes/daily/index.jsx';
+import Monthly from './adminDashboard/scenes/monthly/index.jsx';
+import Breakdown from './adminDashboard/scenes/breakdown/index.jsx';
+import Admin from './adminDashboard/scenes/admin/index.jsx';
+import Performance from './adminDashboard/scenes/performance/index.jsx';
 
 import ProtectedRoute from './components/ProtectedRoute';
-import AdminPage from './pages/AdminPage';
 import Home from './pages/Home';
 import ShoppingCart from './pages/ShoppingCart';
 import Wishlist from './pages/Wishlist';
@@ -17,16 +35,28 @@ import Footer from './components/Footer';
 import Login from './components/Login';
 import { LoginContext } from './context/LoginContext';
 import Checkout from './pages/Checkout';
-import OrderManagement from './components/AdminDashboard/OrderManagment';
-import OrderDetails from './components/AdminDashboard/OrderDetails';
 import ProductDetails from "./pages/ProductDetails";
-import AnalyticsDashboard from './components/AdminDashboard/Analytics';
 
- 
+
 
 const App = () => {
   const { showLogin } = useContext(LoginContext);
-  
+  const mode = useSelector((state) => state.global.mode);
+  const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+  const location = useLocation();
+  const hideNavbarOnRoutes = [
+    "/dashboard",
+    "/products",
+    "/customers",
+    "/transactions",
+    "/geography",
+    "/overview",
+    "/daily",
+    "/monthly",
+    "/breakdown",
+    "/admin",
+    "/performance"
+  ];
 
   return (
     <div className="relative min-h-screen bg-[#490206]">
@@ -39,36 +69,50 @@ const App = () => {
         }}
       ></div>
 
-      <Navbar />
+      {!hideNavbarOnRoutes.includes(location.pathname) && <Navbar />}
 
       <div className="relative">
         <ToastContainer position="bottom-right" />
-        
+
         {showLogin && <Login />} {/* Show login modal when triggered */}
 
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Home />} />
-          <Route
-            path="/admin//*"
-            element={
-              <ProtectedRoute>
-                <AdminPage />
-              </ProtectedRoute>
-            }
-          />
           <Route path="/ShoppingCart" element={<ShoppingCart />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/category/:categoryName" element={<CategoryProducts />} />
           <Route path="/contact" element={<ContactUs />} />
-         
-          <Route path="/order-managment" exact element={<OrderManagement />} />
-          <Route path="/order/:orderId" element={<OrderDetails />} />
           <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/analytics-dashboard" element={<AnalyticsDashboard />} />
+
+
+         
+         <Route element={<ProtectedRoute />}>
+          <Route
+            element={
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Layout />
+              </ThemeProvider>
+            }
+          >
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/customers" element={<Customers />} />
+            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/geography" element={<Geography />} />
+            <Route path="/overview" element={<Overview />} />
+            <Route path="/daily" element={<Daily />} />
+            <Route path="/monthly" element={<Monthly />} />
+            <Route path="/breakdown" element={<Breakdown />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/performance" element={<Performance />} />
+          </Route>
+        </Route>   
 
         </Routes>
-        
+
         <Footer />
       </div>
     </div>
@@ -76,3 +120,4 @@ const App = () => {
 };
 
 export default App;
+
