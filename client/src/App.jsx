@@ -13,7 +13,7 @@ import { useLocation } from 'react-router-dom';
 import { themeSettings } from "./theme.js";
 import Dashboard from './adminDashboard/scenes/dashboard';
 import Layout from './adminDashboard/scenes/layout';
-import Products from './adminDashboard/scenes/products.jsx';
+import Products from './adminDashboard/scenes/products/index.jsx';
 import Customers from './adminDashboard/scenes/customers/index.jsx';
 import Transactions from './adminDashboard/scenes/transactions/index.jsx';
 import Geography from './adminDashboard/scenes/geography/index.jsx';
@@ -58,17 +58,21 @@ const App = () => {
     "/performance"
   ];
 
-  return (
-    <div className="relative min-h-screen bg-[#490206]">
-      <div
-        className="absolute top-[80px] left-0 w-full h-[calc(100%-80px)] bg-repeat-y bg-cover"
-        style={{
-          backgroundImage: `url(${bg2})`,
-          backgroundPosition: "top",
-          backgroundSize: "85% auto",
-        }}
-      ></div>
+   // Determine if the current route is an admin route
+   const isAdminRoute = hideNavbarOnRoutes.includes(location.pathname);
 
+  return (
+    <div className="relative min-h-screen ">
+        {!isAdminRoute && (
+        <div
+          className="absolute top-[20px] left-0 w-full h-[calc(100%-80px)] bg-[#490206] bg-repeat-y bg-cover"
+          style={{
+            backgroundImage: `url(${bg2})`,
+            backgroundPosition: "top",
+            backgroundSize: "95% auto",
+          }}
+        ></div>
+      )}
       {!hideNavbarOnRoutes.includes(location.pathname) && <Navbar />}
 
       <div className="relative">
@@ -113,7 +117,7 @@ const App = () => {
 
         </Routes>
 
-        <Footer />
+        {!isAdminRoute && <Footer />}
       </div>
     </div>
   );

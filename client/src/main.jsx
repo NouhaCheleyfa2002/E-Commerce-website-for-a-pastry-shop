@@ -27,15 +27,15 @@ createRoot(document.getElementById('root')).render(
   <BrowserRouter>
   <Provider store={store}>
     <LoginContextProvider>
-      <CartProvider>
         <WishlistProvider>
           <CheckoutProvider>
+           <CartProvider>
             <AdminProvider>
              <App />
-            </AdminProvider>       
+            </AdminProvider>  
+            </CartProvider>     
           </CheckoutProvider>        
-        </WishlistProvider>  
-      </CartProvider>
+        </WishlistProvider>      
     </LoginContextProvider>
   </Provider>
   </BrowserRouter>

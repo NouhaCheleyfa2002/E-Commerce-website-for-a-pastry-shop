@@ -3,7 +3,7 @@ import { registerUser, loginUser,getAllUsers,
     getUserById,
     updateUserStatus,
     deleteUser,
-    createOrUpdateUser, } from '../controllers/userController.js';
+    createOrUpdateUser } from '../controllers/userController.js';
 import { userAuth, adminAuth } from '../middlewares/auth.js';
 
 const userRouter = express.Router();
@@ -18,9 +18,10 @@ userRouter.get('/profile', userAuth, (req, res) => {
 });
 
 // Admin-only Route
-userRouter.get('/admin-dashboard', userAuth, adminAuth, (req, res) => {
-    res.json({ success: true, message: 'Welcome to Admin Dashboard' });
-});
+
+//userRouter.get('/admin-dashboard', userAuth, adminAuth, (req, res) => {
+ //   res.json({ success: true, message: 'Welcome to Admin Dashboard' });
+//});
 
 // Routes for managing users
 userRouter.get("/", getAllUsers); // Get all users
@@ -28,5 +29,6 @@ userRouter.get("/:id", getUserById); // Get a single user by ID
 userRouter.put("/:id/status", updateUserStatus); // Update user status
 userRouter.delete("/:id", deleteUser); // Delete a user
 userRouter.post("/:id?", createOrUpdateUser);
+;
 
 export default userRouter;

@@ -24,6 +24,7 @@ const BreakdownChart = ({isDashboard = false }) => {
             color: colors[i]
         })
     );
+    console.log(data.salesByCategory)
     return (
     <Box
         height={isDashboard ? "400px" : "100%"}

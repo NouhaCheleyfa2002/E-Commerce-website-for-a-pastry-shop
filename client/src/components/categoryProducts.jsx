@@ -14,6 +14,10 @@ const CategoryProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterInStock, setFilterInStock] = useState(false);
+  const [sortByPrice, setSortByPrice] = useState(""); // "asc" or "desc"
+
 
   // Using useFetch to get products for the selected category
   useEffect(() => {
@@ -82,15 +86,60 @@ const CategoryProducts = () => {
     return <div className="text-center text-red-500">{error}</div>;
   }
 
+  const filteredProducts = products
+  .filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+  .filter((product) => (filterInStock ? product.stock > 0 : true))
+  .sort((a, b) => {
+    if (sortByPrice === "asc") return a.price - b.price;
+    if (sortByPrice === "desc") return b.price - a.price;
+    return 0;
+  });
+
+
   return (
-    <div className="max-w-5xl mx-auto p-6 shadow-md rounded-lg">
-      <h1 className="text-5xl font-bold mb-5 text-center capitalize text-[#bc6c25] mt-5">
+    <div className="max-w-5xl mx-auto p-6 shadow-md rounded-lg ">
+      <h1 className="text-5xl font-bold mb-5 text-center capitalize text-[#5f3c1c] mt-5">
         Products of {categoryName}
       </h1>
 
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+          {/* Search bar */}
+          <input
+            type="text"
+            placeholder="Search products..."
+            className="border border-gray-300 rounded px-3 py-2 w-full md:w-1/3"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+
+          {/* Filters */}
+          <div className="flex gap-4 items-center">
+            <label className="flex items-center gap-1 text-sm">
+              <input
+                type="checkbox"
+                checked={filterInStock}
+                onChange={() => setFilterInStock(!filterInStock)}
+              />
+              In Stock Only
+            </label>
+
+            <select
+              value={sortByPrice}
+              onChange={(e) => setSortByPrice(e.target.value)}
+              className="border border-gray-300 rounded px-2 py-1 text-sm"
+            >
+              <option value="">Sort by Price</option>
+              <option value="asc">Low to High</option>
+              <option value="desc">High to Low</option>
+            </select>
+          </div>
+        </div>
+
       {products.length > 0 ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-5">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <div
               key={product._id}
               className="border p-4 rounded-lg shadow-md bg-gray-50 text-center"
@@ -109,7 +158,7 @@ const CategoryProducts = () => {
               {/* Stock Status */}
               <p
                 className={`text-sm font-semibold mt-2 min-h-[2rem] ${
-                  product.stock ? "text-green-500" : "text-red-500"
+                  product.stock ? "text-[#5f3c1c]" : "text-red-500"
                 }`}
               >
                 {product.stock ? "In Stock ✅" : "Out of Stock ❌"}
@@ -120,16 +169,16 @@ const CategoryProducts = () => {
                 <span className="text-gray-600 text-base font-semibold">
                   {product.price} TND
                 </span>
-                <div onClick={() => navigate(`/product/${product._id}`)} className="flex items-center gap-2">
-                  <FaInfo
-                    className="text-lg cursor-pointer text-gray-600 hover:text-blue-500"
+                <div  className="flex items-center gap-2">
+                  <FaInfo onClick={() => navigate(`/product/${product._id}`)}
+                    className="text-lg cursor-pointer text-gray-600 hover:text-[#5f3c1c]"
                   />
                   <div
                     className="position-relative"
                     onMouseEnter={() => setShowTooltip(product._id + '-cart')}
                     onMouseLeave={() => setShowTooltip(null)}
                   >
-                    <FaShoppingCart onClick={() => handleAddToCart(product)} className="text-lg cursor-pointer text-gray-600 hover:text-blue-500" size={20} />
+                    <FaShoppingCart onClick={() => handleAddToCart(product)} className="text-lg cursor-pointer text-gray-600 hover:text-[#5f3c1c]" size={20} />
                     {showTooltip === product._id + '-cart' && (
                       <span className="position-absolute top-[-25px] start-50 translate-middle bg-dark text-white text-xs px-2 py-1 rounded">
                         Add to Cart
@@ -145,7 +194,7 @@ const CategoryProducts = () => {
                     <FaHeart
                       onClick={() => handleWishlistToggle(product)}
                       className={`text-lg cursor-pointer ${
-                        isInWishlist(product._id) ? "text-red-500" : "text-gray-600 hover:text-red-500"
+                        isInWishlist(product._id) ? "text-[#5f3c1c]" : "text-gray-600 hover:text-[#5f3c1c]"
                       }`}
                       size={20}
                     />
@@ -176,5 +225,7 @@ const CategoryProducts = () => {
     </div>
   );
 };
+
+
 
 export default CategoryProducts;

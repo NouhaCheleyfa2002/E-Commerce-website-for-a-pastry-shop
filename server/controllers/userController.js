@@ -1,11 +1,12 @@
 import userModel from "../models/userModel.js";
+import Transaction from "../models/Transaction.js";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
 
 export const registerUser = async (req, res) => {
     try {
-        const { name, email, password, role} = req.body;
+        const { name, email, password, transactions, role} = req.body;
 
         if (!name || !email || !password) {
             return res.status(400).json({ success: false, message: 'Missing details' });
@@ -22,7 +23,7 @@ export const registerUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Create and save user
-        const newUser = new userModel({ name, email, password: hashedPassword, role: role || 'user'});
+        const newUser = new userModel({ name, email, password: hashedPassword,transactions, role: role || 'user'});
         const user = await newUser.save();
 
         if (!user) {
@@ -61,7 +62,7 @@ export const loginUser = async (req, res) => {
         // Generate JWT with role
         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-        res.json({ success: true, token, user: { name: user.name, role: user.role } });
+        res.json({ success: true, token, user: { name: user.name,transactions: user.transactions, role: user.role } });
 
     } catch (error) {
         console.error("Login Error:", error);
@@ -71,14 +72,30 @@ export const loginUser = async (req, res) => {
 
 // Get all users
 export const getAllUsers = async (req, res) => {
-    try {
-     const users = await userModel.find();
-      res.status(200).json(users);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      res.status(500).json({ message: "Error fetching users" });
+  try {
+    const users = await userModel.find();
+    const usersWithTransactions = [];
+
+    for (const user of users) {
+      // Convert user to plain object
+      const userObj = user.toObject();
+
+      // Find and convert transactions to plain objects
+      const transactions = await Transaction.find({ userId: user._id }).lean();
+      console.log("testing:", transactions);
+
+      // Add transactions to user object
+      userObj.transactions = transactions;
+
+      usersWithTransactions.push(userObj);
     }
-  };
+
+    res.status(200).json(usersWithTransactions);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Error fetching users" });
+  }
+};
   
   // Get a single user by ID
   export const getUserById = async (req, res) => {
@@ -134,7 +151,7 @@ export const getAllUsers = async (req, res) => {
   
   // Create or update a user (for editing)
   export const createOrUpdateUser = async (req, res) => {
-    const { name, email, status, role } = req.body;
+    const { name, email, status, transactions, role } = req.body;
     const userId = req.params.id;
   
     try {
@@ -143,7 +160,7 @@ export const getAllUsers = async (req, res) => {
         // Update user
         user = await userModel.findByIdAndUpdate(
           userId,
-          { name, email, status, role },
+          { name, email, status, transactions, role },
           { new: true }
         );
         if (!user) {
@@ -151,15 +168,18 @@ export const getAllUsers = async (req, res) => {
         }
       } else {
         // Create new user
-        user = new user({ name, email, status, role });
+        user = new userModel({ name, email, status, transactions, role });
         await user.save();
       }
       res.status(200).json(user);
     } catch (error) {
       console.error("Error creating or updating user:", error);
-      res.status(500).json({ message: "Error creating or updating user" });
+      res.status(500).json({ success: false, message: error.message });
     }
   };
+
+  
+  
 
 
 

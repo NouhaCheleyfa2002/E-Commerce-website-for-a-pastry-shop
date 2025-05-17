@@ -1,65 +1,49 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import 'dotenv/config';
+import helmet from 'helmet';
+import morgan from 'morgan';
 import connectDB from './config/mongodb.js';
 import userRouter from './routes/userRoutes.js';
 import productRouter from "./routes/productRoutes.js";
 import uploadRouter from './routes/uploadRoutes.js';
 import orderRouter from "./routes/orderRoutes.js"; 
-import analyticsRouter from './routes/analyticsRoutes.js';
-import SalesAnalytics from './models/salesAnalyticsModel.js';
-import TrafficAnalytics from './models/trafficAnalyticsModel.js';
-import InventoryAnalytics from './models/inventoryAnalyticsModel.js';
-import UserActivityAnalytics from './models/UserActivityAnalyticsModel.js';
-import http from 'http';
-import { Server } from 'socket.io';
+import generalRoutes from './routes/general.js';
+import clientRoutes from './routes/client.js';
+import managementRoutes from './routes/management.js';
+import salesRoutes from './routes/sales.js';
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({policy: "cross-origin"}));
+app.use(morgan("common"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors());
 
-// Create HTTP server and attach Socket.io
-const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
 
-const startServer = async () => {
     await connectDB();
     
     app.use('/api/user', userRouter);
     app.use("/api/product", productRouter);
     app.use("/api", uploadRouter);
     app.use("/api", orderRouter);
-    app.use('/api/analytics', analyticsRouter);
+
+    //app.get('api/config/paypal', (req, res)=> res.send(process.env.PAYPAL_CLIENT_ID))
+
+    app.use("/api/client", clientRoutes);
+    app.use("/api/general", generalRoutes);
+    app.use("/api/management", managementRoutes);
+    app.use("/api/sales", salesRoutes); 
 
     app.get('/', (req, res) => res.send("API working"));
 
-    // WebSocket events
-    io.on("connection", (socket) => {
-        console.log("🟢 A client connected:", socket.id);
 
-        socket.on("disconnect", () => {
-            console.log("🔴 A client disconnected:", socket.id);
-        });
-    });
 
-    // Watch for changes in the database and emit updates
-    const watchCollection = (model, eventName) => {
-        model.watch().on("change", (change) => {
-            io.emit(eventName, change);
-        });
-    };
+   app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
 
-    // Watch analytics collections for changes and push real-time updates
-    watchCollection(SalesAnalytics, 'salesUpdate');
-    watchCollection(TrafficAnalytics, 'trafficUpdate');
-    watchCollection(InventoryAnalytics, 'inventoryUpdate');
-    watchCollection(UserActivityAnalytics, 'userActivityUpdate');
-
-    // ✅ Correctly start the server with WebSockets
-    server.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
-};
-
-startServer();

@@ -12,7 +12,7 @@ const Footer = ()=>{
               backgroundSize: "85% auto",
              
             }}>
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-[100px]">
         {/* Logo & Welcome Message */}
         <div>
           <img src={logo2} alt="" />
@@ -36,8 +36,9 @@ const Footer = ()=>{
         {/* Location */}
         
         <div>
-          <h3 className="text-lg font-semibold mb-3">Location</h3>
+         
           <ul className="space-y-2 text-sm">
+           <h3 className="text-lg font-semibold mb-3">Location</h3>
             <li className="flex items-center gap-2"><FaMapMarkerAlt /> Mahdia</li>
             <li className="flex items-center gap-2"><FaMapMarkerAlt /> Sousse</li>
           </ul>
@@ -45,8 +46,9 @@ const Footer = ()=>{
 
         {/* Contact & Socials */}
         <div>
-          <h3 className="text-lg font-semibold mb-3">Contact</h3>
+          
           <ul className="space-y-2 text-sm">
+          <h3 className="text-lg font-semibold mb-3">Contact</h3>
             <li className="flex items-center gap-2"><FaEnvelope /> Email</li>
             <li className="flex items-center gap-2"><FaFacebookF /> Facebook</li>
             <li className="flex items-center gap-2"><FaInstagram /> Instagram</li>

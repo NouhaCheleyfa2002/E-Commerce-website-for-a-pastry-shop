@@ -24,21 +24,19 @@ const Customers = () => {
             flex: 0.5,
         },
         {
-            field: "phoneNumber",
-            headerName: "Phone Number",
-            flex: 0.5,
-            renderCell: (params) => {
-                return params.value.replace(/^(\d{3})(\d{3})(\d{4})/, "($1)$2-$3")
-            }
-        },{
             field: "country",
             headerName: "Country",
             flex: 0.4,
         },
         {
-            field: "occupation",
-            headerName: "Occupation",
-            flex: 1,
+            field: "city",
+            headerName: "City",
+            flex: 0.4,
+        },
+        {
+            field: "address",
+            headerName: "Address",
+            flex: 0.4,
         },
         {
             field: "role",
@@ -60,7 +58,7 @@ const Customers = () => {
                         border: "none"
                     },
                     "& .MuiDataGrid-cell":{
-                        borderButtom: "none"
+                        borderBottom: "none"
                     },
                     "& .MuiDataGrid-columnHeaders":{
                         backgroundColor: theme.palette.background.alt, 

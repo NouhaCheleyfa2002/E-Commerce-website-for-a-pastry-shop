@@ -28,5 +28,5 @@ const OverallStatSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const OverallStat = mongoose.model("OverallStat", OverallStatSchema);
+const OverallStat =mongoose.models.OverallStat ||  mongoose.model("OverallStat", OverallStatSchema);
 export default OverallStat;

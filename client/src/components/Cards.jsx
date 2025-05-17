@@ -2,17 +2,16 @@ import React, { useContext, useState, useEffect} from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { useNavigate } from 'react-router-dom';
-import { FaShoppingCart, FaHeart, FaInfo } from 'react-icons/fa';
-import { CartContext } from '../context/CartContext';
+import { FaHeart, FaChevronCircleRight} from 'react-icons/fa';
+
 import { WishlistContext } from '../context/WishlistContext';
 import axios from 'axios';
 
 
 const Cards = () => {
   const navigate = useNavigate();
-  const { addItemToCart } = useContext(CartContext);
+
   const { addItemToWishlist, removeItem, isInWishlist } = useContext(WishlistContext);
-  const [cartMessage, setCartMessage] = useState({});
   const [wishlistMessage, setWishlistMessage] = useState({});
   const [showTooltip, setShowTooltip] = useState(null);
   const [products, setProducts] = useState([]);
@@ -59,7 +58,7 @@ const Cards = () => {
   // Handle Add to Cart
   const handleAddToCart = (product) => {
     const item = {
-      id: product._id,  // Use MongoDB's unique ID
+      id: product._id,
       name: product.name,
       price: product.price,
       image: product.image,
@@ -84,68 +83,60 @@ const Cards = () => {
 
     <div className="d-flex flex-wrap justify-content-between gap-4 mt-2">
       {products.map((product) => (
-        <Card key={product._id} style={{ width: '14rem', height: '430px' }} className="mt-3">
+        <Card key={product._id} style={{ width: '15rem', height: '430px' }} className="mt-3">
           <Card.Img
             variant="top"
             src={product.image}
             alt={product.name}
-            style={{ objectFit: 'cover', width: '100%', height: '250px' }}
+            style={{ objectFit: 'cover', width: '100%', height: '223px' }}
           />
           <Card.Body className="d-flex flex-column">
-            <Card.Title>{product.name}</Card.Title>
-            <Card.Text>{product.price} TND</Card.Text>
-            <div className="d-flex justify-content-center gap-3 mt-auto">
-              {/* Details Button */}
+            <Card.Title className='text-[#231508]'>{product.name}</Card.Title>
+            <Card.Text>{product.description}.</Card.Text>
+            <div className="d-flex justify-content-between align-items-center mt-3">
+            <Card.Text className="fw-bold text-[#231508] mb-0">{product.price} TND</Card.Text>
+             <div className="d-flex gap-2">
               <Button
                 onClick={() => navigate(`/product/${product._id}`)}
-                style={{ backgroundColor: "#bc6c25", borderColor: "#bc6c25" }}
-                className="rounded-circle p-2"
+                style={{
+                  backgroundColor: "#8B5E3C",
+                  borderColor: "#8B5E3C",
+                  width: "36px",
+                  height: "36px",
+                  padding: "0",
+                }}
+                className="rounded-circle d-flex align-items-center justify-content-center"
               >
-                <FaInfo size={20} />
+                <FaChevronCircleRight size={20} />
               </Button>
 
-              {/* Add to Cart Button with Tooltip */}
-              <div
-                className="position-relative"
-                onMouseEnter={() => setShowTooltip(`cart-${product._id}`)}
-                onMouseLeave={() => setShowTooltip(null)}
-              >
-                <Button
-                  onClick={() => handleAddToCart(product)}
-                  style={{ backgroundColor: "#bc6c25", borderColor: "#bc6c25" }}
-                  className="rounded-circle p-2"
-                >
-                  <FaShoppingCart size={20} />
-                </Button>
-                {showTooltip === `cart-${product._id}` && (
-                  <span className="tooltip-custom position-absolute top-[-25px] start-50 translate-middle bg-dark text-white text-xs px-2 py-1 rounded">
-                    Add to Cart
-                  </span>
-                )}
-              </div>
-
-              {/* Wishlist Button with Tooltip */}
-              <div
-                className="position-relative"
+              <Button
+                variant="light"
+                onClick={() => handleWishlistToggle(product)}
+                style={{
+                  backgroundColor: "#8B5E3C",
+                  borderColor: "#8B5E3C",
+                  width: "36px",
+                  height: "36px",
+                  padding: "0",
+                }}
+                className={`rounded-circle d-flex align-items-center justify-content-center ${isInWishlist(product._id) ? "text-danger" : "text-white"}`}
                 onMouseEnter={() => setShowTooltip(`wishlist-${product._id}`)}
                 onMouseLeave={() => setShowTooltip(null)}
               >
                 <FaHeart
-                  onClick={() => handleWishlistToggle(product)}
-                  style={{ backgroundColor: "#bc6c25", borderColor: "#bc6c25" }}
-                  className={`rounded-circle p-2 cursor-pointer ${isInWishlist(product._id) ? "text-danger" : "text-white"}`}
-                  size={37}
+                  size={20}
                 />
                 {showTooltip === `wishlist-${product._id}` && (
                   <span className="tooltip-custom position-absolute top-[-25px] start-50 translate-middle bg-dark text-white text-xs px-2 py-1 rounded">
                     {isInWishlist(product._id) ? "Remove from Wishlist" : "Add to Wishlist"}
                   </span>
                 )}
-              </div>
+              </Button>
             </div>
+          </div>
 
             {/* Display Messages */}
-            {cartMessage[product._id] && <p className="text-success mt-2 text-center">{cartMessage[product._id]}</p>}
             {wishlistMessage[product._id] && <p className="text-success mt-2 text-center">{wishlistMessage[product._id]}</p>}
           </Card.Body>
         </Card>

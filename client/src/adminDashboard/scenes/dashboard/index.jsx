@@ -103,7 +103,7 @@ const Dashboard = () => {
         />
         <StatBox
           title="Sales Today"
-          value={data && data.todayStats.totalSales}
+          value={data?.todayStats?.totalSales}
           increase="+21%"
           description="Since last month"
           icon={
@@ -125,7 +125,8 @@ const Dashboard = () => {
         </Box>
         <StatBox
           title="Monthly Sales"
-          value={data && data.thisMonthStats.totalSales}
+          value={data?.thisMonthStats?.totalSales}
+
           increase="+5%"
           description="Since last month"
           icon={
@@ -138,7 +139,8 @@ const Dashboard = () => {
         />
         <StatBox
           title="Yearly Sales"
-          value={data && data.yearlySalesTotal}
+          value={data?.yearlySalesTotal}
+
           increase="+43%"
           description="Since last month"
           icon={

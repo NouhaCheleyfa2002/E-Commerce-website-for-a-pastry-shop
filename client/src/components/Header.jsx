@@ -6,7 +6,6 @@ import ImageCarousel from "./ImageCarousel"
 
 
 
-
 const Header = () => {
   const {user, setShowLogin} = useContext(LoginContext);
   const navigate = useNavigate()
@@ -22,7 +21,7 @@ const Header = () => {
   return (
     <div >
       
-      <ImageCarousel />
+      <ImageCarousel/>
       <motion.div className='flex flex-col justify-center  items-center my-20'
       initial={{opacity:0.2, y:100}}
       transition={{duration:1}}
@@ -30,7 +29,7 @@ const Header = () => {
       viewport={{once:true}}
       >
 
-        <motion.h1 className='text-5xl font-semibold  text-[#bc6c25] mt-4' initial={{opacity:0}}
+        <motion.h1 className='text-5xl font-semibold  text-[#5f3c1c] mt-4' initial={{opacity:0}}
         animate={{opacity:1}}
         transition={{duration:2, delay:0.4}}>Trending Products</motion.h1>
         

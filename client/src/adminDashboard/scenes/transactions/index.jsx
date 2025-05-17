@@ -9,7 +9,7 @@ const Transactions = () => {
   const theme = useTheme();
 
   //values to be sent to the backend
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [sort, setSort] = useState({});
   const [search, setSearch] = useState("");
@@ -94,9 +94,11 @@ const Transactions = () => {
           pageSize={pageSize}
           paginationMode="server"
           sortingMode="server"
-          onPaginationModelChange={(newPage) => setPage(newPage)}
-          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          onSortModelChange={(newSortModel) => setSort(...newSortModel)}
+          onPaginationModelChange={(model) => {
+            setPage(model.page);
+            setPageSize(model.pageSize);
+          }}
+          onSortModelChange={(newSortModel) => setSort(newSortModel[0] || {})}
           components={{Toolbar: DataGridCustomToolbar}}
           componentsProps={{
             toolbar: {searchInput, setSearchInput, setSearch},

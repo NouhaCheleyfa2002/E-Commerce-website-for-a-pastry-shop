@@ -38,9 +38,9 @@ const ShippingDetails = () => {
   }, [formData.shippingDetails]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6">
+    <div className="flex flex-col items-center justify-center h-[500px] p-6">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-        <h3 className="text-2xl font-semibold mb-6 text-center text-blue-600">Shipping Details</h3>
+        <h3 className="text-2xl font-semibold mb-6 text-center text-[#5f3c1c]">Shipping Details</h3>
         <div className="space-y-4">
           <input 
             type="text" 
@@ -48,7 +48,7 @@ const ShippingDetails = () => {
             placeholder="Full Name" 
             value={formDataState.fullName} 
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#5f3c1c]"
           />
           <input 
             type="text" 
@@ -56,7 +56,7 @@ const ShippingDetails = () => {
             placeholder="Address" 
             value={formDataState.address} 
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#5f3c1c]"
           />
           <input 
             type="text" 
@@ -64,7 +64,7 @@ const ShippingDetails = () => {
             placeholder="City" 
             value={formDataState.city} 
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#5f3c1c]"
           />
           <input 
             type="text" 
@@ -72,7 +72,7 @@ const ShippingDetails = () => {
             placeholder="Postal Code" 
             value={formDataState.postalCode} 
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#5f3c1c]"
           />
           <input 
             type="text" 
@@ -80,7 +80,7 @@ const ShippingDetails = () => {
             placeholder="Phone" 
             value={formDataState.phone} 
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#5f3c1c]"
           />
         </div>
       </div>

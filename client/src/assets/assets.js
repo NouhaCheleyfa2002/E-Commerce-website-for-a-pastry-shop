@@ -6,63 +6,15 @@ import email_icon from './email_icon.svg'
 import lock_icon from './lock_icon.svg'
 import profile_icon from './profile_icon.png'
 
-import brikImage from '../assets/img/arabesque/brik2.jpg';
-import koulwochkorImage from '../assets/img/arabesque/1/product6.jpg'
-import ghraybaImage from '../assets/img/arabesque/ghrayba-blanche.jpg'
-import makroudhImage from '../assets/img/arabesque/makroudh-amande.jpg'
-import ArtisanalImage from '../assets/img/hlou/collection2.jpg'
-import brik2Image from '../assets/img/arabesque/brik.jpg'
+import brikImage from '../assets/img/arabesque/1/product6.jpg';
+import ArtisanalImage from '../assets/img/hlou/small_package_mignardise.jpg'
 import salé1Image from '../assets/img/salé/salé1.png'
-import gateauImage from '../assets/img/gateaux/gateau1.png'
-import tarteImage from '../assets/img/gateaux/tartes.jpg'
+import gateauImage from '../assets/img/gateaux/love2.jpg'
+import tarteImage from '../assets/img/gateaux/macarons.jpg'
 import healthyImage from '../assets/img/healthy/healthy.jpg'
 import coffretImage from '../assets/img/coffrets/blue.jpg'
 import jusImage from '../assets/img/jus/jus.png'
 import logo2 from '../assets/img/logo2.png'
-import coccinelle from '../assets/img/hlou/coccinelle.jpg'
-import baklawaBeyNoisette from '../assets/img/hlou/baklawa-bey-noix.jpg'
-import bjewiyaPistachePignon from '../assets/img/hlou/bjewiya_pistache_pignon.jpg'
-import boulePignon from '../assets/img/hlou/boule-pignon.png'
-import kaakPitache from '../assets/img/hlou/kaak-pitache.jpg'
-import fleureMignardise from '../assets/img/hlou/fleure-mignardise.jpg'
-import mlabes from '../assets/img/hlou/mlabes.jpg'
-import fleureNoisette from '../assets/img/hlou/fleure-noisette.jpg'
-import machmoumPistache from '../assets/img/hlou/machmoum-pistache.jpg'
-import carreMign from '../assets/img/hlou/carré-mignardise.jpg'
-import bouquetNoisette from '../assets/img/hlou/bouquet-noisette.jpg'
-import machmoumPisPin from '../assets/img/hlou/machmoum-pistache-pignon.jpg'
-import coeurAmande from '../assets/img/hlou/coeur-amande.jpg'
-import brik from '../assets/img/arabesque/brik.jpg'
-import koulwochkor from '../assets/img/arabesque/koulwochkor.png'
-import makroudh from '../assets/img/arabesque/product5.jpg'
-import makroudh1 from '../assets/img/arabesque/amande.png'
-import ghrayba from '../assets/img/arabesque/ghrayba-blanche.jpg'
-import ghrayba1 from '../assets/img/arabesque/poichiche.png'
-import ghrayba2 from '../assets/img/arabesque/poichiche-noisette.png'
-import Sorgho from '../assets/img/arabesque/sorgho.png'
-import samsa from '../assets/img/arabesque/samsa2.png'
-import petitFour from '../assets/img/arabesque/petit.jpg'
-import tajine from '../assets/img/salé/tajine.png'
-import crevette from '../assets/img/salé/crevette.png'
-import viande from '../assets/img/salé/viande-haché.png'
-import saumon from '../assets/img/salé/salé1.png'
-import gateau1 from '../assets/img/gateaux/gateau1.png'
-import gateau2 from '../assets/img/gateaux/gateau2.jpg'
-import gateau3 from '../assets/img/gateaux/gateau3.jpg'
-import gateau4 from '../assets/img/gateaux/gateau4.jpg'
-import cheesecake from '../assets/img/gateaux/cheesecake.jpg'
-import tiramisu from '../assets/img/gateaux/macarons.jpg'
-import brownie from '../assets/img/gateaux/tiramisu.jpg'
-import macarons from '../assets/img/gateaux/brownie.jpg'
-import gateau11 from '../assets/img/healthy/ealthy 4.jpg'
-import gateau22 from '../assets/img/healthy/healthy 1.jpg'
-import gateau33 from '../assets/img/healthy/healthy 2.jpg'
-import gateau44 from '../assets/img/healthy/healthy 3.jpg'
-import coffret1 from '../assets/img/coffrets/big coffret design.png'
-import coffret2 from '../assets/img/coffrets/blue.jpg'
-import coffret3 from '../assets/img/coffrets/coffet move.jpg'
-import coffret4 from '../assets/img/coffrets/smol blue.jpg'
-import jus from '../assets/img/jus/jus.png'
 import cake1 from '../assets/img/gateaux/gateau1.png'
 import cake2 from '../assets/img/gateaux/gateau2.jpg'
 import cake3 from '../assets/img/gateaux/gateau3.jpg'
@@ -95,40 +47,12 @@ export const assets = {
 
 }
 
-const trendingProducts = [
-  {
-    id: 1,
-    title: "Brik Mahdia",
-    price: 32,
-    image: brikImage,
-  },
-  {
-    id: 2,
-    title: "Koul Wochkor",
-    price: 32,
-    image: koulwochkorImage,
-  },
-  {
-    id: 3,
-    title: "Ghrayba Blanche Aux Noisettes",
-    price: 26,
-    image: ghraybaImage,
-  },
-  {
-    id: 4,
-    title: "Makroudh Aux Amandes",
-    price: 3.75,
-    image: makroudhImage,
-  },
-];
-export default trendingProducts;
-
 export const categories = [
   { name: "Artisanal",
     image: ArtisanalImage 
   },
   { name: "Arabesque",
-    image: brik2Image
+    image: brikImage
   },
   { name: "Salés", 
     image: salé1Image

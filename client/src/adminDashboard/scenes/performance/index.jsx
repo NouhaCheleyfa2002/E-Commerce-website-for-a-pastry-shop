@@ -9,6 +9,7 @@ import Header from "../../components/Header";
 const Performance = () => {
   const theme = useTheme();
   const userId = useSelector((state) => state.global.userId);
+  
   const { data, isLoading } = useGetUserPerformanceQuery(userId);
 
   const columns = [

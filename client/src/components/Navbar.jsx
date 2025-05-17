@@ -55,101 +55,88 @@ const categories = products ?
 
   return (
     <div className="w-full sticky top-5 z-10 bg-[#C24952] bg-opacity-70">
-      {/* Top Bar */}
-      <div className="flex justify-end p-2 text-white text-sm">
-        <span className="cursor-pointer hover:underline">Join us</span>
-      </div>
+  {/* Main Navbar */}
+  <div className="flex items-center justify-between px-6 md:px-10 py-1 h-20 relative">
+      
+      {/* Left - Logo */}
+      <div className="flex-shrink-0">
+        <Link to="/">
+          <img src={milandaLogo} alt="Logo" className="w-[70px] object-contain" />
+        </Link>
+     </div>
 
-      {/* Main Navbar */}
-      <div className="flex items-center justify-between px-10 py-2">
-        {/* Left - Navigation Links */}
-        <ul className="flex gap-10 text-lg cursor-pointer mb-9 list-none">
-          <li className="text-white no-underline hover:underline" onClick={() => navigate("/")}>Home</li>
-
-          {/* Category Dropdown */}
-          <li className="relative" ref={categoryRef}>
-            <button
-              onClick={toggleCategoryDropdown}
-              className="flex items-center gap-2 text-white"
-            >
-              Category <FaChevronDown className={`${openDropdown === "category" ? "rotate-180" : ""} transition-transform`} />
-            </button>
-
-            {openDropdown === "category" && (
-              <ul className="absolute left-0 mt-2 w-48 bg-white shadow-md rounded-lg py-2 text-sm list-none">
-                {loading ? (
-                  <li className="px-4 py-2">Loading...</li>
-                ) : error ? (
-                  <li className="px-4 py-2 text-red-500">Error loading categories</li>
-                ) : (
-                  categories.map((category, index) => (
-                    <li key={index} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                      <Link to={`/category/${category}`} className="block w-full h-full text-black font-semibold no-underline">
-                        {category}
-                      </Link>
-                    </li>
-                  ))
-                )}
-              </ul>
-            )}
-          </li>
-
-          <li>
-            <button onClick={() => navigate('/Contact')} className='text-white no-underline hover:underline'>Contact Us</button>
-          </li>
-        </ul>
-
-        {/* Center - Logo */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 mb-9">
-          <Link to="/">
-            <img src={milandaLogo} alt="Logo" className="w-28 sm:w-30 lg:w-25" />
-          </Link>
-        </div>
-
-        {/* Right - Search Bar and Icons */}
-        <div className="flex items-center gap-4 text-white mb-8">
-          {/* Search Button */}
-          <div className="flex items-center bg-white text-black px-2 py-1 rounded-full">
-            <input
-              type="text"
-              placeholder="Search pastries"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="outline-none px-1 py-1 text-sm"
-            />
-            <button onClick={() => navigate(`/search?q=${searchQuery}`)} className="p-2">
-              <FaSearch className="text-gray-500" />
-            </button>
-          </div>
-
-          {/* Sign In / Profile */}
-          {!user ? (
-            <button onClick={() => setShowLogin(true)} className="cursor-pointer hover:underline">
-              Sign in
-            </button>
-          ) : (
-            <div className="relative">
-              <FaUser className="text-xl cursor-pointer" onClick={() => setIsProfileOpen(!isProfileOpen)} />
-              {isProfileOpen && (
-                <div className="absolute right-0 mt-2 p-2 bg-white rounded-md shadow-md w-40">
-                  <p className="text-sm text-gray-600">Hi, {user.name}</p>
-                  <button
-                    onClick={logout}
-                    className="mt-2 text-sm text-red-500 w-full text-left hover:bg-gray-100 py-1 px-2 rounded"
-                  >
-                    Logout
-                  </button>
-                </div>
+  
+      {/* Center - Navigation Links */}
+     <div className="mb-4">
+      <ul className="absolute left-1/2 transform -translate-x-1/2 flex gap-10 text-lg text-white list-none cursor-pointer mb-9">
+        <li className="hover:underline" onClick={() => navigate("/")}>Home</li>
+  
+        <li className="relative" ref={categoryRef}>
+          <button onClick={toggleCategoryDropdown} className="flex items-center gap-1">
+            Category
+            <FaChevronDown className={`${openDropdown === "category" ? "rotate-180" : ""} transition-transform`} />
+          </button>
+          {openDropdown === "category" && (
+            <ul className="absolute left-0 mt-2 w-48 bg-white shadow-md rounded-lg py-2 text-sm list-none z-20">
+              {loading ? (
+                <li className="px-4 py-2">Loading...</li>
+              ) : error ? (
+                <li className="px-4 py-2 text-red-500">Error loading categories</li>
+              ) : (
+                categories.map((category, index) => (
+                  <li key={index} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    <Link to={`/category/${category}`} className="block w-full h-full text-black font-semibold no-underline">
+                      {category}
+                    </Link>
+                  </li>
+                ))
               )}
-            </div>
+            </ul>
           )}
-
-          {/* Icons */}
-          <FaShoppingCart onClick={() => navigate('/ShoppingCart')} className="text-xl cursor-pointer" />
-          <FaHeart onClick={() => navigate('/Wishlist')} className="text-xl cursor-pointer" />
-        </div>
+        </li>
+  
+        <li>
+          <button onClick={() => navigate('/Contact')} className='hover:underline'>Contact Us</button>
+        </li>
+      </ul>
       </div>
+      {/* Right - Icons */}
+      <div className="flex items-center gap-4 text-white">
+        {/* Search Icon */}
+        <FaSearch
+          onClick={() => navigate(`/search?q=${searchQuery}`)}
+          className="text-xl cursor-pointer"
+        />
+  
+        {/* Sign In / Profile */}
+        {!user ? (
+          <button onClick={() => setShowLogin(true)} className="cursor-pointer hover:underline">
+            Sign in
+          </button>
+        ) : (
+          <div className="relative">
+            <FaUser className="text-xl cursor-pointer" onClick={() => setIsProfileOpen(!isProfileOpen)} />
+            {isProfileOpen && (
+              <div className="absolute right-0 mt-2 p-2 bg-white rounded-md shadow-md w-40">
+                <p className="text-sm text-gray-600">Hi, {user.name}</p>
+                <button
+                  onClick={logout}
+                  className="mt-2 text-sm  text-[#5f3c1c] text-left hover:bg-gray-100 py-1 px-2 rounded"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+      </div>
+        )}
+  
+        {/* Cart and Wishlist Icons */}
+        <FaShoppingCart onClick={() => navigate('/ShoppingCart')} className="text-xl cursor-pointer" />
+        <FaHeart onClick={() => navigate('/Wishlist')} className="text-xl cursor-pointer" />
+        </div>
     </div>
+  </div>
+  
   );
 };
 

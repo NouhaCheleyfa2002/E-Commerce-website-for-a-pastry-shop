@@ -4,50 +4,69 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_BACKEND_URL }),
   reducerPath: "adminApi",
   tagTypes: [
-    "User", "Products", "Customers", "Transactions", "Geography", "Sales", "Admins", "Performance", "Dashboard"
+    "user", "Products", "Customers", "Transactions", "Geography", "Sales", "Admins", "Performance", "Dashboard"
   ],
   endpoints: (build) => ({
     getUser: build.query({
-      query: (id) => `general/user/${id}`,
+      query: (id) => `api/general/user/${id}`,
       providesTags: ["User"],
     }),
     getProducts: build.query({
-      query: () => "client/products",
+      query: () => "api/client/products",
       providesTags: ["Products"],
     }),
     getCustomers: build.query({
-      query: () => "client/customers",
+      query: () => "api/client/customers",
       providesTags: ["Customers"],
     }),
     getTransactions: build.query({
       query: ({ page, pageSize, sort, search}) => ({
-        url: "client/transactions",
+        url: "api/client/transactions",
         method: "GET",
         params: { page, pageSize, sort, search },
       }),
       providesTags: ["Transactions"],
     }),
     getGeography: build.query({
-      query: () => "client/geography",
+      query: () => "api/client/geography",
       providesTags: ["Geography"],
     }),
     getSales: build.query({
-      query: () => "sales/sales",
+      query: () => "api/sales/sales",
       providesTags: ["Sales"]
     }),
     getAdmins: build.query({
-      query: () => "management/admins",
+      query: () => "api/management/admins",
       providesTags: ["Admins"]
     }),
     getUserPerformance: build.query({
-      query: (id) => `management/performance/${id}`,
+      query: (id) => `api/management/performance/${id}`,
       providesTags: ["Performance"]
     }),
     getDashboard: build.query({
-      query: () => "general/dashboard",
+      query: () => "api/general/dashboard",
       providesTags: ["Dashboard"]
-    })
-}),
+    }),
+   
+     // New mutations for update and delete
+     updateProduct: build.mutation({
+        query: ({ id, updatedProduct }) => ({
+          url: `api/client/products/${id}`,
+          method: "PUT",
+          body: updatedProduct,
+        }),
+        // After updating, invalidate 'Products' tag to refetch products
+        invalidatesTags: ["Products"],
+      }),
+      deleteProduct: build.mutation({
+        query: (id) => ({
+          url: `api/client/products/${id}`,
+          method: "DELETE",
+        }),
+        // After deleting, invalidate 'Products' tag to refetch products
+        invalidatesTags: ["Products"],
+      })
+ }),
 });
 
 export const {
@@ -59,5 +78,7 @@ export const {
     useGetSalesQuery,
     useGetAdminsQuery,
     useGetUserPerformanceQuery,
-    useGetDashboardQuery
+    useGetDashboardQuery,
+    useUpdateProductMutation,
+    useDeleteProductMutation,
   } = api;

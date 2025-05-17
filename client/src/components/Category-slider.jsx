@@ -44,7 +44,7 @@ export default function CategorySlider() {
 
   return (
     <section className=" py-12 text-center px-4">
-      <h2 className="text-5xl font-semibold  text-[#bc6c25] mb-6">
+      <h2 className="text-5xl font-semibold  text-[#5f3c1c] mb-6">
         Savor Every Bite As You Indulge Into A World Of The Finest Flavors
       </h2>
       <div className="relative flex items-center mt-5">

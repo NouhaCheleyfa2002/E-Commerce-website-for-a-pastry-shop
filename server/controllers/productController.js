@@ -84,6 +84,8 @@ export const getProductsByCategory = async (req, res) => {
       res.status(500).json({ message: "Error fetching products" });
     }
   };
+
+
   
 // Fetch Trending Products
 export const getTrendingProducts = async (req, res) => {

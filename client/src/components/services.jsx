@@ -4,7 +4,7 @@ import { FaGem, FaTruck, FaMoneyBillWave } from "react-icons/fa";
 export default function Services() {
   return (
     <section className=" py-12 px-4 text-center">
-      <h2 className="text-5xl font-semibold  text-[#bc6c25] mb-6">Our Services</h2>
+      <h2 className="text-5xl font-semibold  text-[#5f3c1c] mb-6">Our Services</h2>
       <div className="flex flex-col md:flex-row justify-center gap-10 mb-12 ">
         <div className="flex flex-col items-center max-w-xs mt-5">
           <FaGem className="text-[#8B5E3C] text-4xl mb-4" />

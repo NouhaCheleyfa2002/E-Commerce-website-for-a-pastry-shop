@@ -31,7 +31,6 @@ const updateQuantity = (id, quantity) => {
           item._id === id ? { ...item, quantity: Math.max(1, quantity) } : item
       );
 
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
       return updatedCart;
   });
 };
@@ -40,15 +39,20 @@ const removeItem = (id) => {
   setCart((prevCart) => {
       const updatedCart = prevCart.filter((item) => item._id !== id);
 
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
       return updatedCart;
   });
 };
 
+const clearCart = () => {
+  setCart([]);
+};
+
   return (
-    <CartContext.Provider value={{ cart, addItemToCart, updateQuantity, removeItem }}>
+    <CartContext.Provider value={{ cart, addItemToCart, updateQuantity, removeItem, clearCart }}>
       {children}
     </CartContext.Provider>
   );
 };
 export default CartProvider;
+
+export const useCart = () => React.useContext(CartContext);
