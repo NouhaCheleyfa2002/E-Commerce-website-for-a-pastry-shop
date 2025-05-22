@@ -22,40 +22,72 @@ const Login = () => {
         e.preventDefault();
 
         try {
-          if (state === 'login') {
-            const { data } = await axios.post(`${backendUrl}/api/user/login`, { email, password });
-    
-            if (data.success) {
-                localStorage.setItem('token', data.token);
-                try {
+            if (state === 'login') {
+                const { data } = await axios.post(`${backendUrl}/api/user/login`, { email, password });
+              
+                if (data.success) {
+                  localStorage.setItem('token', data.token);
+                  setToken(data.token); // Set in context
+                  axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+              
+                  try {
                     const decoded = jwtDecode(data.token);
+              
                     if (!decoded.role) {
-                        throw new Error("Role is missing in JWT");
+                      throw new Error("Role is missing in JWT");
                     }
-                    setUser({ name: data.user.name, role: decoded.role });
+              
+                    const userData = { name: data.user.name, role: decoded.role };
+              
+                    setUser(userData); // Set in context
+                    localStorage.setItem('user', JSON.stringify(userData)); // ✅ Save to localStorage
+              
                     setShowLogin(false);
-
+              
                     // Navigate based on role
-                    decoded.role === 'admin' ? navigate('/admin') : navigate('/homepage');
-
-                } catch (decodeError) {
+                    decoded.role === 'admin' ? navigate('/admin') : navigate('/');
+              
+                  } catch (decodeError) {
                     console.error("Error decoding token:", decodeError);
+                  }
+                } else {
+                  toast.error(data.message);
+                }              
+              } else {
+                const { data } = await axios.post(`${backendUrl}/api/user/register`, {
+                  name,
+                  email,
+                  password,
+                });
+              
+                if (data.success) {
+                  const token = data.token;
+                  localStorage.setItem("token", token);
+                  setToken(token);
+                  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+              
+                  try {
+                    const decoded = jwtDecode(token);
+                    const userData = {
+                      name: data.user.name,
+                      role: decoded.role,
+                      _id: decoded._id,
+                      email: decoded.email,
+                    };
+              
+                    setUser(userData);
+                    localStorage.setItem("user", JSON.stringify(userData));
+                    setShowLogin(false);
+              
+                    decoded.role === "admin" ? navigate("/admin") : navigate("/");
+                  } catch (decodeError) {
+                    console.error("Error decoding token:", decodeError);
+                  }
+                } else {
+                  toast.error(data.message);
                 }
-            } else {
-                toast.error(data.message);
-            }
-        }else{
-            const {data} = await axios.post(`${backendUrl}/api/user/register`, {name, email, password})
-
-            if (data.success) {
-                    setToken(data.token)
-                    setUser(data.user)
-                    localStorage.setItem('token', data.token)
-                    setShowLogin(false)
-            }else{
-                    toast.error(data.message)
-            }
-            }
+              }
+              
         } catch (error) {
             console.error("Login error:", error);
             toast.error("Login failed");

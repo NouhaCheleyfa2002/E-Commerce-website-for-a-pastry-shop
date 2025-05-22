@@ -9,14 +9,14 @@ import axios from 'axios';
 const CategoryProducts = () => {
   const { categoryName } = useParams(); // Get category name from URL
   const navigate = useNavigate();
-  const { addItemToCart } = useContext(CartContext);
+  const { addItemToCart} = useContext(CartContext);
   const { wishlist, addItemToWishlist, removeItem, isInWishlist } = useContext(WishlistContext);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterInStock, setFilterInStock] = useState(false);
-  const [sortByPrice, setSortByPrice] = useState(""); // "asc" or "desc"
+  const [sortByPrice, setSortByPrice] = useState(""); 
 
 
   // Using useFetch to get products for the selected category
@@ -41,15 +41,10 @@ const CategoryProducts = () => {
   const [showTooltip, setShowTooltip] = useState(null);
 
   const handleAddToCart = (product) => {
-    const item = {
-      id: product._id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-    };
+  
+    addItemToCart(product);
 
-    console.log("Adding to cart:", item);
-    addItemToCart(item);
+    console.log("Adding to cart:", product);
 
     setCartMessage((prev) => ({ ...prev, [product._id]: "Added to Cart ✅" }));
     setTimeout(() => {

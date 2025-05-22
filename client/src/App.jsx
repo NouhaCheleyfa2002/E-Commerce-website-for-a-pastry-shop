@@ -64,14 +64,16 @@ const App = () => {
   return (
     <div className="relative min-h-screen ">
         {!isAdminRoute && (
+        
         <div
           className="absolute top-[20px] left-0 w-full h-[calc(100%-80px)] bg-[#490206] bg-repeat-y bg-cover"
           style={{
             backgroundImage: `url(${bg2})`,
             backgroundPosition: "top",
-            backgroundSize: "95% auto",
+            backgroundSize: "95% auto"
           }}
         ></div>
+       
       )}
       {!hideNavbarOnRoutes.includes(location.pathname) && <Navbar />}
 
