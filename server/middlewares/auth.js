@@ -1,35 +1,39 @@
 import jwt from 'jsonwebtoken';
 
 const userAuth = async (req, res, next) => {
-    const { token } = req.headers;
+    const authHeader = req.headers.authorization || req.headers.token;
 
-    if (!token) {
-        return res.status(401).json({ success: false, message: 'Not authorized. Login again' });
+    if (!authHeader) {
+      return res.status(401).json({ success: false, message: 'Not authorized. Login again' });
     }
-
+  
+    const token = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : authHeader;
+  
     try {
-        const tokenDecode = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log("✅ Decoded token payload:", decoded);
 
-        if (!tokenDecode.id || !tokenDecode.role) {
-            return res.status(403).json({ success: false, message: 'Invalid token. Access denied' });
-        }
-
-        // Attach user details to request
-        req.body.userId = tokenDecode.id;
-        req.body.role = tokenDecode.role; // Add role for role-based checks
-
-        next();
+      req.user = {
+        id: decoded.id,
+        role: decoded.role
+      };
+      
+      if (!decoded.id || !decoded.role) {
+        return res.status(403).json({ success: false, message: 'Invalid token. Access denied' });
+      }
+  
+      next();
     } catch (error) {
-        console.log(error);
-        res.status(401).json({ success: false, message: 'Unauthorized access' });
+      console.log(error);
+      res.status(401).json({ success: false, message: 'Unauthorized access' });
     }
 };
 
 const adminAuth = (req, res, next) => {
-    if (req.body.role !== 'admin') {
-        return res.status(403).json({ success: false, message: 'Access denied. Admins only' });
-    }
-    next();
+  if (req.user?.role !== 'admin') {
+    return res.status(403).json({ success: false, message: 'Access denied. Admins only' });
+  }
+  next();
 };
 
 export { userAuth, adminAuth };

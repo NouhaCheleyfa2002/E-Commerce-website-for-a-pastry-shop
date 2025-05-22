@@ -77,7 +77,7 @@ export const getProductsByCategory = async (req, res) => {
     const { categoryName } = req.params;
   
     try {
-      const products = await Product.find({ category: categoryName }); // Assuming your Product schema has a 'category' field
+      const products = await Product.find({ category: categoryName }); 
       res.json(products);
     } catch (error) {
       console.error(error);

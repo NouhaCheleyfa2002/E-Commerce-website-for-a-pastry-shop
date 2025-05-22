@@ -2,109 +2,103 @@ import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLogin } from './LoginContext'; // adjust import path if needed
 
-
 export const CartContext = createContext();
 
 const CartProvider = ({ children }) => {
   const { token, backendUrl } = useLogin();
   const [cart, setCart] = useState([]);
 
-  // Fetch cart from backend on login
+  // Helper: ensure the payload is always an array
+  const ensureArray = (data) => (Array.isArray(data) ? data : []);
+
+  // Fetch cart from backend on login or token/backendUrl change
   const getCart = async () => {
-    if (!token) return;
-  
+    if (!token || !backendUrl) return;
     try {
       const res = await axios.get(`${backendUrl}/api/cart`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-  
-      setCart(res.data.cartItems || []);
-      console.log("Fetched cart data:", res.data);
-  
+      setCart(ensureArray(res.data.cartItems));
+      console.log('Fetched cart data:', res.data);
     } catch (error) {
       console.error('Failed to fetch cart:', error);
+      setCart([]);
     }
   };
-  
+
   useEffect(() => {
-    getCart(); 
+    getCart();
   }, [token, backendUrl]);
-  
 
   // Add item to cart
   const addItemToCart = async (product) => {
+    if (!token || !backendUrl) return;
     try {
-      const res = await axios.post(
+      await axios.post(
         `${backendUrl}/api/cart/add`,
-        {
-          productId: product._id,
-          quantity: 1,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { productId: product._id, quantity: 1 },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      console.log("Added to cart:", res.data);
-      getCart();
+      await getCart();
     } catch (error) {
       console.error('Failed to add item:', error);
     }
   };
 
-  // Update item quantity
+  // Update item quantity (refetch complete cart)
   const updateQuantity = async (productId, quantity) => {
+    if (!token || !backendUrl) return;
     try {
-      const res = await axios.put(
+      await axios.put(
         `${backendUrl}/api/cart/update`,
         { productId, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      if (res.data) {
-        setCart(res.data); // because backend returns updated cart directly
-      }
+      await getCart();
     } catch (error) {
       console.error('Failed to update quantity:', error);
     }
   };
-  
 
-  // Remove item
+  // Remove item (refetch complete cart)
   const removeItem = async (productId) => {
+    if (!token || !backendUrl) return;
     try {
-      const res = await axios.delete(`${backendUrl}/api/cart/remove`, {
-        headers: { Authorization: `Bearer ${token}` },
-        data: { productId }, // pass in `data`
-      });
-      if (res.data) {
-        setCart(res.data); // backend sends updated cart
-      }
+      await axios.delete(
+        `${backendUrl}/api/cart/remove`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          data: { productId },
+        }
+      );
+      await getCart();
     } catch (error) {
       console.error('Failed to remove item:', error);
     }
-  };  
+  };
 
-  // Optional: Clear cart
+  // Clear cart
   const clearCart = async () => {
+    if (!token || !backendUrl) return;
     try {
-      await axios.delete(`${backendUrl}/api/cart/clear`, { headers: {Authorization: `Bearer ${token}` } });
+      await axios.delete(
+        `${backendUrl}/api/cart/clear`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setCart([]);
-    } catch (err) {
-      console.error("Failed to clear cart:", err);
+    } catch (error) {
+      console.error('Failed to clear cart:', error);
     }
   };
-  
 
   return (
-    <CartContext.Provider value={{ cart, addItemToCart,getCart, updateQuantity, removeItem, clearCart }}>
+    <CartContext.Provider
+      value={{ cart: ensureArray(cart), addItemToCart, getCart, updateQuantity, removeItem, clearCart }}
+    >
       {children}
     </CartContext.Provider>
   );
 };
 
 export default CartProvider;
-
 export const useCart = () => React.useContext(CartContext);
