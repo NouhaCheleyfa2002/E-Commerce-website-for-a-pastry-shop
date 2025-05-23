@@ -30,7 +30,7 @@ const WishlistProvider = ({ children }) => {
     try {
       await axios.post(
         `${backendUrl}/api/wishlist/add`,
-        { productId: product._id },
+        { productId: product },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       // re-fetch so we get populated productId

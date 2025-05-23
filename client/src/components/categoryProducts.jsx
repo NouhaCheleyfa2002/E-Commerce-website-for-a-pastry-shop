@@ -53,18 +53,12 @@ const CategoryProducts = () => {
   };
 
   const handleWishlistToggle = (product) => {
-    const item = {
-      id: product._id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-    };
 
     if (isInWishlist(product._id)) {
       removeItem(product._id);
       setWishlistMessage((prev) => ({ ...prev, [product._id]: "Removed from Wishlist" }));
     } else {
-      addItemToWishlist(item);
+      addItemToWishlist(product);
       setWishlistMessage((prev) => ({ ...prev, [product._id]: "Added to Wishlist ❤️" }));
     }
 
