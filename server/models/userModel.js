@@ -14,6 +14,19 @@ const cartItemSchema = new mongoose.Schema({
   },
 }, { _id: false }); // Prevent Mongoose from auto-generating _id for each subdoc
 
+const wishlistItemSchema = new mongoose.Schema({
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+    required: true,
+  },
+  addedAt: {
+    type: Date,
+    default: Date.now,
+  },
+}, { _id: false });
+
+
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -28,6 +41,7 @@ const userSchema = new mongoose.Schema({
     default: "Active",
   },
   cart: [cartItemSchema],
+  wishlist: [wishlistItemSchema],
 });
 
 const userModel = mongoose.models.user || mongoose.model("user", userSchema);
