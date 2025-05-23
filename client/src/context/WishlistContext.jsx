@@ -1,30 +1,61 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
+import { useLogin } from './LoginContext';
 
 export const WishlistContext = createContext();
 
 const WishlistProvider = ({ children }) => {
+  const { token, backendUrl } = useLogin();
   const [wishlist, setWishlist] = useState([]);
 
-  const addItemToWishlist = (product) => {
-    setWishlist((prevWishlist) => {
-      // Change 'id' to '_id' for MongoDB compatibility
-      const existingItem = prevWishlist.find((item) => item._id === product._id);
-      if (existingItem) {
-        return prevWishlist; // Item already exists in wishlist, no need to add again
-      } else {
-        return [...prevWishlist, { ...product }];
-      }
-    });
+  // Fetch full populated wishlist
+  const fetchWishlist = useCallback(async () => {
+    if (!token || !backendUrl) return;
+    try {
+      const res = await axios.get(
+        `${backendUrl}/api/wishlist`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setWishlist(res.data);
+    } catch (error) {
+      console.error('Failed to fetch wishlist:', error.response ? error.response.data : error.message);
+    }
+  }, [token, backendUrl]);
+
+  useEffect(() => { fetchWishlist(); }, [fetchWishlist]);
+
+  // Add item to wishlist
+  const addItemToWishlist = async (product) => {
+    if (!token || !backendUrl) return;
+    try {
+      await axios.post(
+        `${backendUrl}/api/wishlist/add`,
+        { productId: product._id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      // re-fetch so we get populated productId
+      await fetchWishlist();
+    } catch (error) {
+      console.error('Failed to add to wishlist:', error.response ? error.response.data : error.message);
+    }
   };
 
-  const removeItem = (_id) => {
-    // Change 'id' to '_id' for MongoDB compatibility
-    setWishlist((prevWishlist) => prevWishlist.filter((item) => item._id !== _id));
+  // Remove item
+  const removeItem = async (productId) => {
+    if (!token || !backendUrl) return;
+    try {
+      await axios.delete(
+        `${backendUrl}/api/wishlist/remove/${productId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setWishlist(current => current.filter(item => item.productId._id !== productId));
+    } catch (error) {
+      console.error('Failed to remove from wishlist:', error.response ? error.response.data : error.message);
+    }
   };
 
-  const isInWishlist = (_id) => {
-    // Change 'id' to '_id' for MongoDB compatibility
-    return wishlist.some((item) => item._id === _id);
+  const isInWishlist = (productId) => {
+    return wishlist.some(item => item.productId._id === productId);
   };
 
   return (

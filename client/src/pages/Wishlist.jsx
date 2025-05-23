@@ -1,39 +1,38 @@
-import { WishlistContext } from '../context/WishlistContext.jsx';
-import { FaTrash, FaHeart } from 'react-icons/fa';
-import { CartContext } from '../context/CartContext';
 import { useState, useContext } from "react";
-
-import { FaShoppingCart } from 'react-icons/fa';
+import { WishlistContext } from '../context/WishlistContext.jsx';
+import { CartContext } from '../context/CartContext';
+import { FaTrash, FaHeart, FaShoppingCart } from 'react-icons/fa';
 
 const Wishlist = () => {
-
   const { wishlist, removeItem } = useContext(WishlistContext);
-   const { addItemToCart } = useContext(CartContext);
-    const [cartMessage, setCartMessage] = useState({});
+  const { addItemToCart } = useContext(CartContext);
+  const [cartMessage, setCartMessage] = useState({});
 
-    const handleAddToCart = (item) => {
-      addItemToCart(item);
-      setCartMessage((prev) => ({
+  const handleAddToCart = async (product) => {
+    if (!product || !product._id) return;
+
+    // add product to cart
+    await addItemToCart(product);
+    setCartMessage(prev => ({
+      ...prev,
+      [product._id]: "Item added to cart!"
+    }));
+
+    // remove from wishlist
+    await removeItem(product._id);
+
+    setTimeout(() => {
+      setCartMessage(prev => ({
         ...prev,
-        [item._id]: "Item added to cart!",
+        [product._id]: null
       }));
-    
-      // Remove from wishlist after adding to cart
-      removeItem(item._id);
-    
-      setTimeout(() => {
-        setCartMessage((prev) => ({
-          ...prev,
-          [item._id]: null,
-        }));
-      }, 2000);
-    };
-    
+    }, 2000);
+  };
 
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-3xl font-bold text-center text-[#5f3c1c] mb-6 mt-4">My Wishlist</h2>
-      {wishlist.length === 0 ? (
+      {!wishlist.length ? (
         <div className="text-center text-gray-500">
           <FaHeart className="mx-auto text-4xl text-[#490206] mb-3" />
           <p>Your wishlist is empty.</p>
@@ -51,51 +50,51 @@ const Wishlist = () => {
                 </tr>
               </thead>
               <tbody>
-                {wishlist.map((item, index) => (
-                  <tr key={item._id || index}  className="relative">
-                   <td className="p-3 flex items-center">
+                {wishlist.map(({ productId: product }) => (
+                  <tr key={product._id} className="relative">
+                    <td className="p-3 flex items-center">
                       <img
-                        src={item.image}
-                        alt={item.name}
+                        src={product.image}
+                        alt={product.name}
                         className="w-8 h-[25px] object-cover rounded mr-4"
                       />
-                      <span className="text-sm">Item Name</span>
+                      <span className="text-sm">{product.name}</span>
                     </td>
-
-                    <td className="p- border">${item.price.toFixed(2)}</td>
-                    <td className="p-3 border flex justify-center gap-4">
-                     <button 
-                      onClick={() => removeItem(item._id)} 
-                      className="bg-[#8B5E3C] hover:bg-[#a25b1f] text-white px-6 py-2 rounded-lg flex items-center gap-2 transition duration-300"
-                      title="Remove from wishlist"
-                    >
-                      <FaTrash />
-                      Remove
-                    </button>
-
-                          {/* Add to Cart Button */}
-                     
+                    <td className="p-3 border">
+                      {typeof product.price === 'number'
+                        ? `$${product.price.toFixed(2)}`
+                        : 'N/A'}
+                    </td>
+                    <td className="p-3 border flex flex-col items-center gap-2">
+                      <div className="flex gap-4">
                         <button
-                          onClick={() => handleAddToCart(item)}
-                          className="bg-[#8B5E3C] hover:bg-[#a25b1f] text-white px-6 py-2 rounded-lg flex items-center gap-2 transition duration-300"
+                          onClick={() => removeItem(product._id)}
+                          className="bg-[#8B5E3C] hover:bg-[#a25b1f] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition duration-300"
+                          title="Remove from wishlist"
                         >
-                          <FaShoppingCart />
-                          Add to Cart
+                          <FaTrash />
+                          Remove 
                         </button>
+                        <button
+                          onClick={() => handleAddToCart(product)}
+                          className="bg-[#8B5E3C] hover:bg-[#a25b1f] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition duration-300"
+                          title="Add to cart"  
+                        >
 
-                        <span className="absolute -top-8 left-0 opacity-0 group-hover:opacity-100 transition-opacity text-sm bg-black text-white py-1 px-2 rounded shadow-md">
-                          Add to Cart
-                        </span>
-
-                      {cartMessage[item._id] && (
-                        <p className="text-[#5f3c1c] mt-4 text-sm">{cartMessage[item._id]}</p>
+                          <FaShoppingCart />
+                          Add to cart
+                        </button>
+                      </div>
+                      {cartMessage[product._id] && (
+                        <p className="text-[#5f3c1c] text-sm">
+                          {cartMessage[product._id]}
+                        </p>
                       )}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            
           </div>
           <div className="mt-6">
             <p className="text-sm text-gray-600">{wishlist.length} item(s) in your wishlist</p>

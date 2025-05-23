@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { FaTrash, FaMinus, FaPlus } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -82,7 +82,7 @@ const ShoppingCart = () => {
                       )}
                       <span>{item.name}</span>
                     </td>
-                    <td className="p-3 border">${price.toFixed(2)}</td>
+                    <td className="p-3 border">{price.toFixed(2)} TND</td>
                     <td className="p-3 border flex justify-center items-center">
                       <button
                         onClick={() => updateQuantity(item._id, item.quantity - 1)}
@@ -99,7 +99,7 @@ const ShoppingCart = () => {
                         <FaPlus />
                       </button>
                     </td>
-                    <td className="p-3 border">${(price * item.quantity).toFixed(2)}</td>
+                    <td className="p-3 border">{(price * item.quantity).toFixed(2)} TND</td>
                     <td className="p-3 border">
                       <button onClick={() => removeItem(item._id)} className="text-[#5f3c1c]">
                         <FaTrash />
@@ -112,7 +112,7 @@ const ShoppingCart = () => {
           </table>
         </div>
         <div className="mt-6 text-right">
-          <h3 className="text-xl font-semibold">Total: ${totalPrice.toFixed(2)}</h3>
+          <h3 className="text-xl font-semibold">Total: {totalPrice.toFixed(2)} TND</h3>
           <button
             onClick={() => navigate('/Checkout')}
             className="mt-4 bg-[#5f3c1c] text-white px-6 py-2 rounded"
