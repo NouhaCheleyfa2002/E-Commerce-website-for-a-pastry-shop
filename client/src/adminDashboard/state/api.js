@@ -4,7 +4,7 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_BACKEND_URL }),
   reducerPath: "adminApi",
   tagTypes: [
-    "user", "Products", "Customers", "Transactions", "Geography", "Sales", "Admins", "Performance", "Dashboard"
+    "User", "Products", "Customers", "Transactions", "Geography", "Sales", "Admins", "Performance", "Dashboard", "Category",
   ],
   endpoints: (build) => ({
     getUser: build.query({
@@ -15,6 +15,11 @@ export const api = createApi({
       query: () => "api/client/products",
       providesTags: ["Products"],
     }),
+    getProductCategories: build.query({
+      query: () => 'api/product/categories',
+      providesTags: ["Category"],
+    }),
+    
     getCustomers: build.query({
       query: () => "api/client/customers",
       providesTags: ["Customers"],
@@ -46,6 +51,11 @@ export const api = createApi({
     getDashboard: build.query({
       query: () => "api/general/dashboard",
       providesTags: ["Dashboard"]
+    }),
+
+    getNewsletterSubscribers: build.query({
+      query: () => "api/newsletter/subscribers",
+      providesTags: ["NewsletterSubscribers"]
     }),
    
      // New mutations for update and delete
@@ -79,6 +89,8 @@ export const {
     useGetAdminsQuery,
     useGetUserPerformanceQuery,
     useGetDashboardQuery,
+    useGetNewsletterSubscribersQuery,
+    useGetProductCategoriesQuery,
     useUpdateProductMutation,
     useDeleteProductMutation,
   } = api;

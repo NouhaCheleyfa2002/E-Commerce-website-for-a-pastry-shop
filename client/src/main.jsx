@@ -30,9 +30,9 @@ createRoot(document.getElementById('root')).render(
         <WishlistProvider>
           <CheckoutProvider>
            <CartProvider>
-            <AdminProvider>
-             <App />
-            </AdminProvider>  
+             <AdminProvider>
+              <App />
+             </AdminProvider>  
             </CartProvider>     
           </CheckoutProvider>        
         </WishlistProvider>      

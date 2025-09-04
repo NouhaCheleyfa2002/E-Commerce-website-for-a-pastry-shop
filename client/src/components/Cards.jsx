@@ -49,21 +49,6 @@ const Cards = () => {
     }, 2000);
   };
 
-  // Handle Add to Cart
-  const handleAddToCart = (product) => {
-    const item = {
-      id: product._id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-    };
-
-    addItemToCart(product);
-    setCartMessage((prev) => ({ ...prev, [product._id]: "Added to Cart ✅" }));
-    setTimeout(() => {
-      setCartMessage((prev) => ({ ...prev, [product._id]: "" }));
-    }, 2000);
-  };
 
   if (loading) {
     return <div className="text-center">Loading...</div>;

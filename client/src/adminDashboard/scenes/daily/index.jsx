@@ -1,4 +1,4 @@
-import React, { useMemo, useState,useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Box, useTheme } from "@mui/material";
 import Header from "../../components/Header";
 import { ResponsiveLine } from "@nivo/line";
@@ -6,6 +6,70 @@ import { useGetSalesQuery } from "../../state/api";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from 'date-fns';
+import { styled } from '@mui/material/styles';
+
+// Styled wrapper for DatePicker to ensure visibility
+const StyledDatePickerWrapper = styled(Box)(({ theme }) => ({
+  '& .react-datepicker-wrapper': {
+    width: '100%',
+  },
+  '& .react-datepicker__input-container input': {
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: '4px',
+    padding: '8px 12px',
+    fontSize: '14px',
+    outline: 'none',
+    '&:focus': {
+      borderColor: theme.palette.primary.main,
+      boxShadow: `0 0 0 2px ${theme.palette.primary.main}25`,
+    },
+  },
+  '& .react-datepicker': {
+    backgroundColor: theme.palette.background.paper,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: '8px',
+    fontFamily: theme.typography.fontFamily,
+  },
+  '& .react-datepicker__header': {
+    backgroundColor: theme.palette.background.default,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+  '& .react-datepicker__current-month': {
+    color: theme.palette.text.primary,
+    fontWeight: 'bold',
+  },
+  '& .react-datepicker__day-name': {
+    color: theme.palette.text.secondary,
+  },
+  '& .react-datepicker__day': {
+    color: theme.palette.text.primary,
+    '&:hover': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+  '& .react-datepicker__day--selected': {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.dark,
+    },
+  },
+  '& .react-datepicker__day--in-selecting-range': {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.primary.contrastText,
+  },
+  '& .react-datepicker__day--in-range': {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.primary.contrastText,
+  },
+  '& .react-datepicker__navigation': {
+    '& .react-datepicker__navigation-icon::before': {
+      borderColor: theme.palette.text.primary,
+    },
+  },
+}));
 
 const Daily = () => {
   const [startDate, setStartDate] = useState(new Date());
@@ -14,16 +78,16 @@ const Daily = () => {
   const theme = useTheme();
   const { data, isLoading } = useGetSalesQuery();
 
-useEffect(() => {
-  if (data?.dailyData?.length > 0) {
-    const sortedDates = [...data.dailyData]
-      .map((entry) => new Date(entry.date))
-      .sort((a, b) => a - b);
+  useEffect(() => {
+    if (data?.dailyData?.length > 0) {
+      const sortedDates = [...data.dailyData]
+        .map((entry) => new Date(entry.date))
+        .sort((a, b) => a - b);
 
-    setStartDate(sortedDates[0]);
-    setEndDate(sortedDates[sortedDates.length - 1]);
-  }
-}, [data]);
+      setStartDate(sortedDates[0]);
+      setEndDate(sortedDates[sortedDates.length - 1]);
+    }
+  }, [data]);
 
   const formattedData = useMemo(() => {
     if (!data) return [];
@@ -51,24 +115,23 @@ useEffect(() => {
   
     return [totalSalesLine, totalUnitsLine];
   }, [data, startDate, endDate]);
-  
-  
 
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="DAILY SALES" subtitle="Chart of daily sales" />
       <Box height="75vh">
-        <Box display="flex" justifyContent="flex-end">
-          <Box>
+        <Box display="flex" justifyContent="flex-end" gap={2} mb={2}>
+          <StyledDatePickerWrapper>
             <DatePicker
               selected={startDate}
               onChange={(date) => setStartDate(date)}
               selectsStart
               startDate={startDate}
               endDate={endDate}
+              placeholderText="Start Date"
             />
-          </Box>
-          <Box>
+          </StyledDatePickerWrapper>
+          <StyledDatePickerWrapper>
             <DatePicker
               selected={endDate}
               onChange={(date) => setEndDate(date)}
@@ -76,8 +139,9 @@ useEffect(() => {
               startDate={startDate}
               endDate={endDate}
               minDate={startDate}
+              placeholderText="End Date"
             />
-          </Box>
+          </StyledDatePickerWrapper>
         </Box>
 
         {data ? (

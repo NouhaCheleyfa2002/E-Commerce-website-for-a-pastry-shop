@@ -26,7 +26,8 @@ import {
     CalendarMonthOutlined,
     AdminPanelSettingsOutlined,
     TrendingUpOutlined,
-    PieChartOutlined
+    PieChartOutlined,
+    EmailOutlined
 } from "@mui/icons-material"
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -90,6 +91,10 @@ const navItems = [
         text: "Performance",
         icon: <TrendingUpOutlined />
     }, 
+    {
+        text: "Newsletter",
+        icon: <EmailOutlined />
+    }
 ]
 
 

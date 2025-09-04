@@ -15,6 +15,9 @@ import managementRoutes from './routes/management.js';
 import salesRoutes from './routes/sales.js';
 import cartRouter from './routes/cart.js';
 import wishlistRouter from './routes/wishlist.js';
+import newsletterRouter from './routes/newsletterRoutes.js';
+
+
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -31,12 +34,14 @@ app.use(cors());
 
     await connectDB();
     
+
     app.use('/api/user', userRouter);
     app.use("/api/product", productRouter);
     app.use("/api", uploadRouter);
     app.use("/api", orderRouter);
     app.use("/api/cart", cartRouter);
     app.use("/api/wishlist", wishlistRouter);
+    app.use('/api/newsletter', newsletterRouter);
 
     //app.get('api/config/paypal', (req, res)=> res.send(process.env.PAYPAL_CLIENT_ID))
 
@@ -44,6 +49,7 @@ app.use(cors());
     app.use("/api/general", generalRoutes);
     app.use("/api/management", managementRoutes);
     app.use("/api/sales", salesRoutes); 
+   
 
     app.get('/', (req, res) => res.send("API working"));
 

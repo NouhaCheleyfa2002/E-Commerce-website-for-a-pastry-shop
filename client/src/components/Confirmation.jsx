@@ -21,7 +21,7 @@ const Confirmation = () => {
     return <p>Loading shipping details...</p>;
   }
 
-  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2);
+  const total = cart.reduce((acc, item) => acc + item.productId.price * item.quantity, 0).toFixed(2);
 
   return (
     <div className="text-gray-800 space-y-4">
@@ -39,9 +39,9 @@ const Confirmation = () => {
         <h3 className="text-lg font-semibold mb-2">Your treats</h3>
         <ul className="space-y-2">
           {cart.map((item) => (
-            <li key={item._id} className="flex justify-between">
-              <span>{item.name} × {item.quantity}</span>
-              <span>{(item.price * item.quantity).toFixed(2)} TND</span>
+            <li key={item.productId._id} className="flex justify-between">
+              <span>{item.productId.name} × {item.quantity}</span>
+              <span>{(item.productId.price * item.quantity).toFixed(2)} TND</span>
             </li>
           ))}
         </ul>

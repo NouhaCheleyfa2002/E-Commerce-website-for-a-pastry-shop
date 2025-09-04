@@ -5,6 +5,7 @@ import twitter_icon from './twitter_icon.svg'
 import email_icon from './email_icon.svg'
 import lock_icon from './lock_icon.svg'
 import profile_icon from './profile_icon.png'
+import cross_icon from './cross_icon.png'
 
 import brikImage from '../assets/img/arabesque/1/product6.jpg';
 import ArtisanalImage from '../assets/img/hlou/small_package_mignardise.jpg'
@@ -43,7 +44,8 @@ export const assets = {
     email_icon,
     lock_icon,
     profile_icon,
-    logo2
+    logo2,
+    cross_icon
 
 }
 

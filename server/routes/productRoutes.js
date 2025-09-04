@@ -1,44 +1,41 @@
 import express from "express";
 import {
-    bulkInsertProducts,
     getAllProducts,
+    createProduct,
+    bulkInsertProducts,
     getTrendingProducts,
     getProductById,   
     getProductsByCategory,
     deleteProduct,
-    updateProduct
+    updateProduct,
+    getCategories
 } from "../controllers/productController.js";
-import Product from "../models/productModel.js";
+import { upload } from "../config/cloudinaryConfig.js"; 
+
 
 const productRouter = express.Router();
+
+productRouter.get('/', getAllProducts); 
+
+productRouter.post("/",  upload.single("image"), createProduct);
 
 // Bulk insert products
 productRouter.post("/bulk-insert", bulkInsertProducts);
 
-// Get all products
-productRouter.get("/", getAllProducts);
 
 // Route to fetch trending products
 productRouter.get("/trending", getTrendingProducts);
+
+productRouter.get('/categories', getCategories);
+
+// Get products by category
+productRouter.get("/category/:categoryName", getProductsByCategory);
 
 // Get product by ID
 productRouter.get("/:id", getProductById);
 
 
-// Get products by category
-productRouter.get("/category/:categoryName", getProductsByCategory);
-
-// Get all distinct product categories
-productRouter.get("/categories", async (req, res) => {
-    try {
-      const categories = await Product.distinct("category");
-      res.json(categories);
-    } catch (err) {
-      res.status(500).json({ message: "Failed to fetch categories", error: err.message });
-    }
-  });
-
-productRouter.put("/:id", updateProduct);
+productRouter.put('/:id',upload.single("image"), updateProduct);
 
 // Delete a product
 productRouter.delete("/:id", deleteProduct);

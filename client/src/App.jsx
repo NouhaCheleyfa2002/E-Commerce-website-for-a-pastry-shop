@@ -25,6 +25,8 @@ import Admin from './adminDashboard/scenes/admin/index.jsx';
 import Performance from './adminDashboard/scenes/performance/index.jsx';
 
 import ProtectedRoute from './components/ProtectedRoute';
+
+import SearchResults from './pages/search.jsx';
 import Home from './pages/Home';
 import ShoppingCart from './pages/ShoppingCart';
 import Wishlist from './pages/Wishlist';
@@ -36,7 +38,10 @@ import Login from './components/Login';
 import { LoginContext } from './context/LoginContext';
 import Checkout from './pages/Checkout';
 import ProductDetails from "./pages/ProductDetails";
-
+import UserProtectedRoute from './components/userProtectedRoute.jsx';
+import Newsletter from './adminDashboard/scenes/NewsletterSubscribers/NewsletterSubscribers.jsx'; 
+import Profile from './pages/profile.jsx';
+import Settings from './pages/settings.jsx';
 
 
 const App = () => {
@@ -55,22 +60,24 @@ const App = () => {
     "/monthly",
     "/breakdown",
     "/admin",
-    "/performance"
+    "/performance",
+    "/newsletter"
   ];
 
    // Determine if the current route is an admin route
    const isAdminRoute = hideNavbarOnRoutes.includes(location.pathname);
 
   return (
-    <div className="relative min-h-screen ">
+    <div className="relative min-h-screen   ">
         {!isAdminRoute && (
         
         <div
-          className="absolute top-[20px] left-0 w-full h-[calc(100%-80px)] bg-[#490206] bg-repeat-y bg-cover"
+          className="absolute  bg-[#490206] left-0 w-full h-[calc(100%-80px)] bg-repeat-y"
           style={{
             backgroundImage: `url(${bg2})`,
             backgroundPosition: "top",
             backgroundSize: "95% auto"
+          
           }}
         ></div>
        
@@ -85,16 +92,33 @@ const App = () => {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/ShoppingCart" element={<ShoppingCart />} />
-          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/search" element={<SearchResults />} />
+            <Route
+              path="/ShoppingCart"
+              element={
+                <UserProtectedRoute>
+                  <ShoppingCart />
+                </UserProtectedRoute>
+              }
+            />
+            <Route
+              path="/wishlist"
+              element={
+                <UserProtectedRoute>
+                  <Wishlist />
+                </UserProtectedRoute>
+              }
+            />
+
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/category/:categoryName" element={<CategoryProducts />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
 
 
-         
-         <Route element={<ProtectedRoute />}>
+          <Route element={<ProtectedRoute />}>
           <Route
             element={
               <ThemeProvider theme={theme}>
@@ -114,8 +138,11 @@ const App = () => {
             <Route path="/breakdown" element={<Breakdown />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/performance" element={<Performance />} />
+            <Route path="newsletter" element={<Newsletter />} />
           </Route>
         </Route>   
+
+   
 
         </Routes>
 

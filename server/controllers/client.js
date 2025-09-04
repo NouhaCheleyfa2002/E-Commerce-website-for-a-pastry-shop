@@ -37,7 +37,7 @@ export const getProducts = async (req, res) => {
   export const getTransactions = async(req, res) => {
     try {
       //sort should look like this: {"field", "userId", "sort", "desc"}
-      const { page = 1, pageSize=20, sort= null, search = ""} = req.query;
+      const { page = 1, pageSize = 20, sort = null, search = "" } = req.query;
   
       //formatted sort should look like {userId: -1}
       const generateSort = () => {
@@ -49,22 +49,31 @@ export const getProducts = async (req, res) => {
       }
       const sortFormatted = Boolean(sort) ? generateSort() : {};
   
-      const transactions = await Transaction.find({
-        $or: [
-          {cost: { $regex: new RegExp(search, "i")}},
-          {userId: { $regex: new RegExp(search, "i")}}
-        ],
-      })
-      .sort(sortFormatted)
-      .skip((page-1) * pageSize)
-      .limit(pageSize);
+      // Build search query based on search input
+      let searchQuery = {};
+      
+      if (search && search.trim() !== "") {
+        const searchConditions = [];
+        
+        // Search in string fields using regex
+        searchConditions.push({ name: { $regex: new RegExp(search, "i") } });
+        
+        // If search is a number, search for exact matches in numeric fields
+        if (!isNaN(search)) {
+          const numericSearch = Number(search);
+          searchConditions.push({ cost: numericSearch });
+          searchConditions.push({ userId: numericSearch });
+        }
+        
+        searchQuery = { $or: searchConditions };
+      }
   
-      const total = await Transaction.countDocuments({
-        $or: [
-          {cost: { $regex: new RegExp(search, "i")}},
-          {userId: { $regex: new RegExp(search, "i")}}
-        ],
-      });
+      const transactions = await Transaction.find(searchQuery)
+        .sort(sortFormatted)
+        .skip((page - 1) * pageSize)
+        .limit(pageSize);
+  
+      const total = await Transaction.countDocuments(searchQuery);
   
       res.status(200).json({
         transactions,

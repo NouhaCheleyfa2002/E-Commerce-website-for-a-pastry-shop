@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import {
   LightModeOutlined,
   DarkModeOutlined,
@@ -23,15 +23,30 @@ import {
   MenuItem,
   useTheme,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useLogin } from "../../context/LoginContext"; // adjust path if needed
+
+
 
 const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
+  const navigate = useNavigate();
+  const { logout, setShowLogin } = useLogin();
+
 
   const [anchorEl, setAnchorEl] = useState(null);
   const isOpen = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
+
+  const handleLogout = () => {
+    logout(); 
+    setShowLogin(true);   
+    handleClose();
+    navigate("/"); // Navigate to homepage after logout
+  };
+
 
   return (
     <AppBar
@@ -47,17 +62,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
           <IconButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
             <MenuIcon />
           </IconButton>
-          <FlexBetween
-            backgroundColor={theme.palette.background.alt}
-            borderRadius="9px"
-            gap="3rem"
-            p="0.1rem 1.5rem"
-          >
-            <InputBase placeholder="Search..." />
-            <IconButton>
-              <Search />
-            </IconButton>
-          </FlexBetween>
+          
         </FlexBetween>
 
         {/* RIGHT SIDE */}
@@ -69,9 +74,14 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
               <LightModeOutlined sx={{ fontSize: "25px" }} />
             )}
           </IconButton>
-          <IconButton>
-            <SettingsOutlined sx={{ fontSize: "25px" }} />
-          </IconButton>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => navigate("/")}
+            sx={{ fontSize: "16px", textTransform: "none", backgroundColor: "white" }}
+          >
+            Go to Homepage
+          </Button>
 
           <FlexBetween>
             <Button
@@ -118,7 +128,8 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
               onClose={handleClose}
               anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
-              <MenuItem onClick={handleClose}>Log Out</MenuItem>
+            <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+
             </Menu>
           </FlexBetween>
         </FlexBetween>

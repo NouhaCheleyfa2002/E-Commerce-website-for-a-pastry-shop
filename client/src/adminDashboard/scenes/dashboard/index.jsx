@@ -36,11 +36,7 @@ const Dashboard = () => {
         headerName: "User Id",
         flex: 1,
     },
-    {
-        field: "createdAt",
-        headerName: "CreatedAt",
-        flex: 1,
-    },
+  
     {
         field: "products",
         headerName: "# of Products",
@@ -55,25 +51,58 @@ const Dashboard = () => {
     },   
   ];
 
+
+  const handleDownload = () => {
+    if (!data || !data.transactions) return;
+  
+    const transactions = data.transactions;
+  
+    const headers = ['Transaction ID', 'User ID', '# of Products', 'Cost'];
+    const rows = transactions.map(t => [
+      t._id,
+      t.userId,
+      t.products.length,
+      `$${Number(t.cost).toFixed(2)}`
+    ]);
+  
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
+  
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+  
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'dashboard-report.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
+
   return (
-    <Box m="1.5rem 2.5rem">
+    <Box m=".5rem 2.5rem">
       <FlexBetween>
         <Header 
           title="DASHBOARD" subtitle="Welcome to your dashboard"
         />
         <Box>
-          <Button
-            sx={{
-              backgroundColor: theme.palette.secondary.light,
-              color: theme.palette.background.alt,
-              fontSize: "14px",
-              fontWeight: "bold",
-              padding: "10px 20px"
-            }}
-          >
-            <DownloadOutlined sx={{ mr: "10px"}} />
-            Download Reports
-          </Button>
+        <Button
+          onClick={handleDownload}
+          sx={{
+            backgroundColor: theme.palette.secondary.light,
+            color: theme.palette.background.alt,
+            fontSize: "14px",
+            fontWeight: "bold",
+            padding: "10px 20px"
+          }}
+        >
+          <DownloadOutlined sx={{ mr: "10px" }} />
+          Download Reports
+        </Button>
+
         </Box>
       </FlexBetween>
 

@@ -1,7 +1,28 @@
 import { FaGem, FaTruck, FaMoneyBillWave } from "react-icons/fa";
-
+import { LoginContext } from '../context/LoginContext';
+import { useState, useContext } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export default function Services() {
+  const {backendUrl} = useContext(LoginContext);
+  const [email, setEmail] = useState("");
+
+  const handleSubscribe = async () => {
+    try {
+      const { data } = await axios.post(`${backendUrl}/api/newsletter/subscribe`, { email });
+
+      if (data.success) {
+        toast.success(data.message);
+        setEmail("");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Subscription failed");
+    }
+  };
+
   return (
     <section className=" py-12 px-4 text-center">
       <h2 className="text-5xl font-semibold  text-[#5f3c1c] mb-6">Our Services</h2>
@@ -29,9 +50,11 @@ export default function Services() {
           <input
             type="email"
             placeholder="Enter Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="p-2 rounded-l-lg border border-gray-300 flex-1 focus:outline-none"
           />
-          <button className="bg-[#8B5E3C] text-white px-4 py-2 rounded-r-lg">Register Now</button>
+          <button onClick={handleSubscribe} className="bg-[#8B5E3C] text-white px-4 py-2 rounded-r-lg">Register Now</button>
         </div>
       </div>
     </section>

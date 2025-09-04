@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { CartContext } from '../context/CartContext';
 import { CheckoutContext } from '../context/CheckoutContext';
 
-
 const OrderSummary = () => {
   const { cart } = useContext(CartContext);
   const { formData } = useContext(CheckoutContext);
@@ -14,11 +13,12 @@ const OrderSummary = () => {
     postalCode: 'N/A',
     phone: 'N/A',
   };
+  console.log("Cart items:", cart.map(item => item.productId._id));
 
-  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2);
+  const total = cart.reduce((acc, item) => acc + item.productId.price * item.quantity, 0).toFixed(2);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen  py-6 px-4">
+    <div className="flex flex-col items-center justify-center min-h-screen py-6 px-4">
       <div className="w-full max-w-xl bg-white p-8 rounded-lg shadow-lg">
         <h3 className="text-2xl font-semibold mb-6 text-center text-[#5f3c1c]">Order Summary</h3>
         
@@ -26,9 +26,9 @@ const OrderSummary = () => {
           <h4 className="text-xl font-semibold mb-2">Items in Your Cart:</h4>
           <ul className="space-y-3">
             {cart.map((item) => (
-              <li key={item._id} className="flex justify-between text-lg">
-                <span>{item.name}</span>
-                <span>{item.quantity} x {item.price} TND</span>
+              <li key={item.productId._id} className="flex justify-between text-lg">
+                <span>{item.productId.name}</span>
+                <span>{item.quantity} x {item.productId.price} TND</span>
               </li>
             ))}
           </ul>

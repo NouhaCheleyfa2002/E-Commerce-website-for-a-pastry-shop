@@ -32,23 +32,49 @@ const Transactions = () => {
         {
             field: "userId",
             headerName: "User Id",
+            flex: 0.8,
+        },
+        {
+            field: "name",
+            headerName: "Name",
             flex: 1,
         },
         {
             field: "createdAt",
-            headerName: "CreatedAt",
+            headerName: "Created At",
             flex: 1,
+            renderCell: (params) => {
+                if (!params.value) return "N/A";
+                
+                // Handle different date formats
+                const date = new Date(params.value);
+                
+                // Check if date is valid
+                if (isNaN(date.getTime())) {
+                    return "Invalid Date";
+                }
+                
+                // Format the date nicely
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
         },
         {
             field: "products",
             headerName: "# of Products",
-            flex: 0.5,
+            flex: 0.6,
             sortable: false,
-            renderCell: (params) => params.value.length
-        },{
+            renderCell: (params) => params.value ? params.value.length : 0
+        },
+        {
             field: "cost",
             headerName: "Cost",
-            flex: 1,
+            flex: 0.8,
             renderCell: (params) => `$${Number(params.value).toFixed(2)}`,
         },   
     ];
@@ -107,6 +133,6 @@ const Transactions = () => {
       </Box>
     </Box>
   )
-    };
+};
 
 export default Transactions;
